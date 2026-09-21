@@ -1,0 +1,6 @@
+// Tiny Web Audio soundscape; no external files means it deploys anywhere.
+export class Sound {
+  constructor(){ this.ctx=null; this.muted=false; }
+  wake(){ if(this.muted)return; const C=window.AudioContext||window.webkitAudioContext; if(!C)return; this.ctx ??= new C(); if(this.ctx.state==='suspended')this.ctx.resume(); }
+  beep(freq,duration=.1,type='sine',volume=.04,slide=1){ if(!this.ctx||this.muted)return; const t=this.ctx.currentTime,o=this.ctx.createOscillator(),g=this.ctx.createGain(); o.type=type;o.frequency.setValueAtTime(freq,t);o.frequency.exponentialRampToValueAtTime(Math.max(30,freq*slide),t+duration);g.gain.setValueAtTime(volume,t);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g).connect(this.ctx.destination);o.start(t);o.stop(t+duration); }
+  jump(){this.beep(250,.13,'square',.05,2.1)} hit(){this.beep(130,.3,'sawtooth',.06,.45)} correct(){this.beep(440,.09,'sine',.05,1.5);setTimeout(()=>this.beep(660,.12,'sine',.05,1.4),90)} wrong(){this.beep(200,.18,'square',.05,.55)} power(){this.beep(370,.12,'triangle',.05,1.6);setTimeout(()=>this.beep(590,.16,'triangle',.05,1.3),80)} level(){this.beep(330,.1,'sine',.06,1.5);setTimeout(()=>this.beep(500,.14,'sine',.06,1.5),100)} }
