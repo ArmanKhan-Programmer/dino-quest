@@ -27,7 +27,7 @@ export class DinoGame {
     const box={x:d.x+7,y:d.y+6,w:d.w-15,h:d.duck?35:d.h-10};
     for(const o of this.obstacles)if(hit(box,o)){if(d.shield>0){o.x=-100;this.burst(o.x+o.w,o.y,17,'#ffd166');continue;}this.crash();return;}
     for(const p of this.powers)if(hit(box,{x:p.x,y:p.y,w:30,h:30})){p.x=-100;d.shield=420;this.score+=50;this.sound.power();this.burst(p.x+15,p.y,18,'#ffd166');this.events.notice('Star shield!');}
-    for(const q of this.particles){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=.09*dt;q.life-=dt}.particles=this.particles.filter(q=>q.life>0);
+    for(const q of this.particles){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=.09*dt;q.life-=dt}this.particles=this.particles.filter(q=>q.life>0);
     if(Math.floor(this.distance)%15===0)this.send();if(this.distance>=this.quizAt)this.beginQuiz();
   }
   spawnObstacle(){const type=this.level>=3&&Math.random()<.35?'bird':this.level>=2&&Math.random()<.4?'double':'rock';let o={x:W+30,type};if(type==='bird')Object.assign(o,{y:GROUND-130-Math.random()*45,w:54,h:30});else if(type==='double')Object.assign(o,{y:GROUND-48,w:76,h:48});else Object.assign(o,{y:GROUND-55,w:32+Math.random()*22,h:55});this.obstacles.push(o)}
